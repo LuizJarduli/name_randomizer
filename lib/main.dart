@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         title: 'Name Randomizer',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
         ),
         home: const MyHomePage(),
       ),
@@ -27,6 +27,11 @@ class MyApp extends StatelessWidget {
 
 class MyAppState extends ChangeNotifier {
   var current = WordPair.random();
+
+  void getNext() {
+    current = WordPair.random();
+    notifyListeners();
+  }
 }
 
 class MyHomePage extends StatelessWidget {
@@ -35,6 +40,7 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
+    var pair = appState.current;
 
     return Scaffold(
       body: SafeArea(
@@ -43,10 +49,44 @@ class MyHomePage extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('A random idea:'),
-              Text(appState.current.asLowerCase),
+              BigCard(pair: pair),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: appState.getNext,
+                child: const Text('Next'),
+              )
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class BigCard extends StatelessWidget {
+  const BigCard({
+    super.key,
+    required this.pair,
+  });
+
+  final WordPair pair;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final style = theme.textTheme.displayMedium!.copyWith(
+      color: theme.colorScheme.onPrimary,
+    );
+    final effectivePairSemanticsLabel = '${pair.first} ${pair.second}';
+
+    return Card(
+      color: theme.colorScheme.primary,
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Text(
+          pair.asLowerCase,
+          style: style,
+          semanticsLabel: effectivePairSemanticsLabel,
         ),
       ),
     );
