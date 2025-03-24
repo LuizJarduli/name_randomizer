@@ -1,4 +1,4 @@
-import 'package:english_words/src/word_pair.dart';
+import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:name_randomizer/my_app_state.dart';
 import 'package:name_randomizer/widgets/empty_list.dart';
@@ -11,7 +11,7 @@ class FavoritesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final appState = context.watch<MyAppState>();
     final favorites = appState.favorites;
-    final hasFavorites = favorites.length > 0;
+    final hasFavorites = favorites.isNotEmpty;
 
     return Scaffold(
       appBar: AppBar(
